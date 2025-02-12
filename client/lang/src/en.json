@@ -1,0 +1,23 @@
+{
+  "TinyMCE.DELETE_IMAGE": "Delete image",
+  "TinyMCE.DELETE_MEDIA": "Delete media",
+  "TinyMCE.EDIT_IMAGE": "Edit image",
+  "TinyMCE.EDIT_LINK": "Edit link",
+  "TinyMCE.EDIT_MEDIA": "Edit media",
+  "TinyMCE.FILE": "File",
+  "TinyMCE.INSERT_FROM_FILES": "Insert from Files",
+  "TinyMCE.INSERT_LINK": "Insert link",
+  "TinyMCE.INSERT_LINK_WITH_SHORTCUT": "Insert link {shortcut}",
+  "TinyMCE.INSERT_VIA_URL": "Insert media via URL",
+  "TinyMCE.LINK_ANCHOR": "Link to an anchor on a page",
+  "TinyMCE.LINK_EMAIL": "Insert email link",
+  "TinyMCE.LINK_EXTERNAL": "Insert external link",
+  "TinyMCE.LINK_PAGE'": "Link to a page",
+  "TinyMCE.LINKLABEL_ANCHOR": "Anchor on a page",
+  "TinyMCE.LINKLABEL_EMAIL": "Link to email address",
+  "TinyMCE.LINKLABEL_EXTERNALURL": "Link to external URL",
+  "TinyMCE.LINKLABEL_FILE": "Link to a file",
+  "TinyMCE.LINKLABEL_PAGE": "Page on this site",
+  "TinyMCE.MEDIA": "Media",
+  "TinyMCE.REMOVE_LINK": "Remove link"
+}

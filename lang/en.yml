@@ -1,0 +1,5 @@
+en:
+  SilverStripe\TinyMCE\TinyMCEConfig:
+    BEST_FIT: 'Best fit'
+    ORIGINAL: Original
+    PIXEL_WIDTH: '{width} pixels'
