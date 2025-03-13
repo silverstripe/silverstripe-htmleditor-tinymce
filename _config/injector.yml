@@ -1,0 +1,11 @@
+---
+Name: tinymce-injector
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
+    class: SilverStripe\TinyMCE\TinyMCEConfig
+  SilverStripe\TinyMCE\TinyMCEScriptGenerator: '%$SilverStripe\TinyMCE\TinyMCECombinedGenerator'
+  SilverStripe\TinyMCE\TinyMCECombinedGenerator:
+    class: SilverStripe\TinyMCE\TinyMCECombinedGenerator
+    properties:
+      AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler'
