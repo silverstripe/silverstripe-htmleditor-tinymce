@@ -19,7 +19,7 @@
     "events-polyfill": "^2.1.2",
     "lodash.escaperegexp": "^4.1.2",
     "react-load-script": "^0.0.6",
-    "tinymce": "^6.2.0"
+    "tinymce": "^7.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
