@@ -153,7 +153,7 @@ $presets = array_merge(
 TinyMCEConfig::get('cms')->setOption('image_size_presets', $presets);
 ```
 
-## Disable OEmbed
+## Disable oEmbed
 
 The ["oEmbed" standard](https://www.oembed.com/) is implemented by many media services around the web, allowing easy
 representation of files just by referencing a website URL. For example, a content author can insert a playable youtube
