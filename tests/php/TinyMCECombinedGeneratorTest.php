@@ -59,7 +59,10 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         // Get config for this
         /** @var TinyMCECombinedGenerator $generator */
         $generator = Injector::inst()->create(TinyMCECombinedGenerator::class);
-        $this->assertMatchesRegularExpression('#_tinymce/tinymce-testconfig-[0-9a-z]{10,10}#', $generator->generateFilename($c));
+        $this->assertMatchesRegularExpression(
+            '#_tinymce/tinymce-testconfig-[0-9a-z]{10,10}#',
+            $generator->generateFilename($c)
+        );
         $content = $generator->generateContent($c);
         $this->assertStringContainsString(
             "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir';\n",
@@ -89,19 +92,23 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
 
         // Check plugin links included
         $this->assertStringContainsString(
+            // phpcs:disable Generic.Files.LineLength.TooLong
             <<<EOS
 tinymce.each('tinymce/langs/en.js,mycode/plugin1.js,tinymce/plugins/plugin4/plugin.min.js,tinymce/plugins/plugin4/langs/en.js,tinymce/plugins/plugin5/plugin.js,mycode/plugin6.js,_resources/mycode/plugin8.js?m=
 EOS
             ,
+            // phpcs:enable Generic.Files.LineLength.TooLong
             $content
         );
 
         // Check theme links included
         $this->assertStringContainsString(
+            // phpcs:disable Generic.Files.LineLength.TooLong
             <<<EOS
 tinymce/themes/testtheme/theme.js,tinymce/themes/testtheme/langs/en.js'.split(','),function(f){tinymce.ScriptLoader.markDone(baseURL+f);});
 EOS
             ,
+            // phpcs:enable Generic.Files.LineLength.TooLong
             $content
         );
     }
