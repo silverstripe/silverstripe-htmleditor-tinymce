@@ -179,9 +179,12 @@ class TinyMCEConfigTest extends SapphireTest
         );
 
         // Plugin specified with standard location
+        // Get the path dynamically, because CI uses _resources/client/dist/tinymce/plugins when run as nthe root.
+        $module = ModuleLoader::getModule('silverstripe/htmleditor-tinymce');
+        $pluginsPath = $module->getResource('client/dist/tinymce/plugins/')->getURL();
         $this->assertContains('plugin4', array_keys($plugins ?? []));
         $this->assertEquals(
-            '/subdir/_resources/vendor/silverstripe/htmleditor-tinymce/client/dist/tinymce/plugins/plugin4/plugin.min.js',
+            "$pluginsPath/plugin4/plugin.min.js",
             $plugins['plugin4']
         );
 
