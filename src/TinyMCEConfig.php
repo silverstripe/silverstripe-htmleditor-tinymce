@@ -259,37 +259,37 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'alignleft' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-left'
+                    'classes' => 'text-left'
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'left'
+                    'classes' => 'left'
                 ]
             ],
             'aligncenter' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-center'
+                    'classes' => 'text-center'
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'center'
+                    'classes' => 'center'
                 ]
             ],
             'alignright' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-right'
+                    'classes' => 'text-right'
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
-                    'classes' =>'right'
+                    'classes' => 'right'
                 ]
             ],
             'alignjustify' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-justify'
+                    'classes' => 'text-justify'
                 ],
             ],
         ],
@@ -307,7 +307,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'branding' => false,
         'promotion' => false,
         'upload_folder_id' => null, // Set folder ID for insert media dialog
-        'link_default_target' => '_blank', // https://www.tiny.cloud/docs/tinymce/6/autolink/#example-using-link_default_target
+        // https://www.tiny.cloud/docs/tinymce/6/autolink/#example-using-link_default_target
+        'link_default_target' => '_blank',
         'convert_unsafe_embeds' => true, // SS-2024-001
     ];
 
@@ -535,7 +536,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * Logic based heavily on javascript version from tiny_mce_src.js
      *
-     * @param string $validElementsConfig - The valid_elements or extended_valid_elements string to add to the allow list
+     * @param string $validElementsConfig The valid_elements or extended_valid_elements string to add to the allow list
      * @see https://www.tiny.cloud/docs/tinymce/6/content-filtering/#valid_elements
      */
     private function parseElementRules($validElementsConfig, HTMLEditorRuleSet $ruleSet): void
@@ -587,7 +588,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
                                 $attrName = HTMLEditorRuleSet::patternToRegex($attrName);
                             }
 
-                            // Denied from global (note it's unclear what this means, but this is done by TinyMCE js as well)
+                            // Denied from global
+                            // (note it's unclear what this means, but this is done by TinyMCE js as well)
                             if ($attrType === '-') {
                                 $elementRule->removeAttributeRule($attrName);
                                 continue;
@@ -911,8 +913,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         $this->initImageSizePresets($settings);
 
         // Set correct language if one was not explicitly set
-        $settings['language'] ??= TinyMCEConfig::get_tinymce_lang();
-        $langUrl = TinyMCEConfig::get_tinymce_lang_url();
+        $settings['language'] ??= TinyMCEConfig::getTinymceLang();
+        $langUrl = TinyMCEConfig::getTinymceLangUrl();
         if ($langUrl) {
             $settings['language_url'] ??= $langUrl;
         }
@@ -1041,7 +1043,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * Get the current tinyMCE language
      */
-    public static function get_tinymce_lang(): string
+    public static function getTinymceLang(): string
     {
         $lang = static::config()->get('tinymce_lang');
         $locale = i18n::get_locale();
@@ -1054,9 +1056,9 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * Get the URL for the language pack of the current language
      */
-    public static function get_tinymce_lang_url(): string
+    public static function getTinymceLangUrl(): string
     {
-        $lang = static::get_tinymce_lang();
+        $lang = static::getTinymceLang();
         $dir = static::config()->get('lang_dir');
         if ($lang !== 'en' && !empty($dir)) {
             $resource = ModuleResourceLoader::singleton()->resolveResource($dir);

@@ -1,0 +1,8 @@
+/client/src
+/tests export-ignore
+/.tx export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.github export-ignore
+/*.dist export-ignore
+/.editorconfig export-ignore

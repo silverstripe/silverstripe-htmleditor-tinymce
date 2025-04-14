@@ -20,7 +20,6 @@ use SilverStripe\TinyMCE\TinyMCEConfig;
 
 class TinyMCEConfigTest extends SapphireTest
 {
-
     public function testEditorIdentifier()
     {
         $config = TinyMCEConfig::get('myconfig');
@@ -142,7 +141,20 @@ class TinyMCEConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');
-        $c->disablePlugins('anchor', 'table', 'emoticons', 'code', 'image', 'link', 'importcss', 'lists', 'autolink', 'searchreplace', 'visualblocks', 'wordcount');
+        $c->disablePlugins(
+            'anchor',
+            'table',
+            'emoticons',
+            'code',
+            'image',
+            'link',
+            'importcss',
+            'lists',
+            'autolink',
+            'searchreplace',
+            'visualblocks',
+            'wordcount'
+        );
         $c->enablePlugins(
             [
                 'plugin1' => 'mypath/plugin1.js',
@@ -179,9 +191,12 @@ class TinyMCEConfigTest extends SapphireTest
         );
 
         // Plugin specified with standard location
+        // Get the path dynamically, because CI uses _resources/client/dist/tinymce/plugins when run as nthe root.
+        $module = ModuleLoader::getModule('silverstripe/htmleditor-tinymce');
+        $pluginsPath = $module->getResource('client/dist/tinymce/plugins/')->getURL();
         $this->assertContains('plugin4', array_keys($plugins ?? []));
         $this->assertEquals(
-            '/subdir/_resources/vendor/silverstripe/htmleditor-tinymce/client/dist/tinymce/plugins/plugin4/plugin.min.js',
+            "$pluginsPath/plugin4/plugin.min.js",
             $plugins['plugin4']
         );
 
@@ -378,13 +393,15 @@ class TinyMCEConfigTest extends SapphireTest
                 'expected' => [HTMLEditorElementRule::GLOBAL_NAME => ['attributes' => []]],
             ],
             'valid_elements only' => [
-                'validElements' => '@[id|class|style],a[rel|!href],-strong/b[class<class1?class2?class3],span![data-+],',
+                'validElements' => '@[id|class|style],a[rel|!href],-strong/b[class<class1?class2?class3],'
+                                   . 'span![data-+],',
                 'extendedValidElements' => '',
                 'expected' => $expected,
             ],
             'extended_valid only' => [
                 'validElements' => '',
-                'extendedValidElements' => '@[id|class|style],a[rel|!href],-strong/b[class<class1?class2?class3],span![data-+]',
+                'extendedValidElements' => '@[id|class|style],a[rel|!href],-strong/b[class<class1?class2?class3],'
+                                           . 'span![data-+]',
                 'expected' => $expected,
             ],
             'configs get combined' => [
@@ -501,7 +518,11 @@ class TinyMCEConfigTest extends SapphireTest
 
     private function getElementRulesAsArray(HTMLEditorRuleSet $ruleset): array
     {
-        $elementRules = [HTMLEditorElementRule::GLOBAL_NAME => ['attributes' => $this->getAttributeRulesAsArray($ruleset->getGlobalRule())]];
+        $elementRules = [
+            HTMLEditorElementRule::GLOBAL_NAME => [
+                'attributes' => $this->getAttributeRulesAsArray($ruleset->getGlobalRule())
+            ]
+        ];
         foreach ($ruleset->getElementSubstitutionRules() as $from => $to) {
             $elementRules[$from] = ['convertTo' => $to];
         }
