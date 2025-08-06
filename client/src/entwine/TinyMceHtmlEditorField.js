@@ -91,6 +91,9 @@ ss.editorWrappers.tinyMCE = (function () {
 
       // Ensure save events write back to textarea
       config.setup = function (ed) {
+        ed.on('dirty', () => {
+          self.save();
+        });
         ed.on('change', () => {
           self.save();
         });
