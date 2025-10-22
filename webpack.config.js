@@ -18,6 +18,7 @@ const config = [
       'TinyMCE_sslink': `${PATHS.SRC}/plugins/TinyMCE_sslink.js`,
       'TinyMCE_sslink-external': `${PATHS.SRC}/plugins/TinyMCE_sslink-external.js`,
       'TinyMCE_sslink-email': `${PATHS.SRC}/plugins/TinyMCE_sslink-email.js`,
+      'TinyMCE_sslink-phone': `${PATHS.SRC}/plugins/TinyMCE_sslink-phone.js`,
       // asset-admin plugins
       'TinyMCE_ssmedia': `${PATHS.SRC}/plugins/TinyMCE_ssmedia.js`,
       'TinyMCE_ssembed': `${PATHS.SRC}/plugins/TinyMCE_ssembed.js`,
