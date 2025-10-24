@@ -106,7 +106,7 @@ jQuery.entwine('ss', ($) => {
 
       const phone = attributes.href.replace(/^tel:/, '').split('?')[0];
 
-      // Prefix the URL with "http://" if no prefix is found
+      // Prefix the phone number with "tel:"
       if (phone) {
         href = `tel:${phone}`;
       }
