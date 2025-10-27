@@ -15,6 +15,7 @@
   "TinyMCE.LINK_PAGE'": "Link to a page",
   "TinyMCE.LINKLABEL_ANCHOR": "Anchor on a page",
   "TinyMCE.LINKLABEL_EMAIL": "Link to email address",
+  "TinyMCE.LINKLABEL_PHONE": "Link to phone number",
   "TinyMCE.LINKLABEL_EXTERNALURL": "Link to external URL",
   "TinyMCE.LINKLABEL_FILE": "Link to a file",
   "TinyMCE.LINKLABEL_PAGE": "Page on this site",

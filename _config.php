@@ -33,6 +33,7 @@ call_user_func(function () {
             'sslink' => $module->getResource('client/dist/js/TinyMCE_sslink.js'),
             'sslinkexternal' => $module->getResource('client/dist/js/TinyMCE_sslink-external.js'),
             'sslinkemail' => $module->getResource('client/dist/js/TinyMCE_sslink-email.js'),
+            'sslinkphone' => $module->getResource('client/dist/js/TinyMCE_sslink-phone.js'),
         ];
         // Move anchor button to be after the link button
         $editorConfig->removeButtons('anchor');
