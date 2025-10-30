@@ -700,7 +700,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      */
     public function enablePremiumPlugins(string|array $plugin): static
     {
-        $apiKey = static::config()->get('premium_api_key');
+        $apiKey = $this->getPremiumApiKey();
         if (empty($apiKey)) {
             throw new Exception(sprintf(
             '%s::premium_api_key is required to be set to include a premium plugin',
