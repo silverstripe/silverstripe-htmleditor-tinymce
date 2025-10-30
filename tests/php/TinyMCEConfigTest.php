@@ -214,8 +214,8 @@ class TinyMCEConfigTest extends SapphireTest
 
     public function testEnablePremiumPluginsByString()
     {
-        TinyMCEConfig::config()->set('premium_api_key', 'test1234');
         $c = new TinyMCEConfig();
+        $c->setPremiumApiKey('test1234');
         $c->enablePremiumPlugins('plugin_premium');
         $this->assertContains('plugin_premium', array_keys($c->getPlugins() ?? []));
         $this->assertEquals('https://cdn.tiny.cloud/1/test1234/tinymce/6/plugins/plugin_premium/plugin.min.js', $c->getPlugins()['plugin_premium']);
