@@ -312,7 +312,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'convert_unsafe_embeds' => true, // SS-2024-001
     ];
 
-    private static string $premium_api_key = '';
+    protected string $premium_api_key = '';
 
     protected static string $configType = 'tinyMCE';
 
@@ -369,6 +369,17 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     {
         $this->theme = $theme;
         return $this;
+    }
+
+    public function setPremiumApiKey(string $apiKey): static
+    {
+        $this->premium_api_key = $apiKey;
+        return $this;
+    }
+
+    public function getPremiumApiKey(): string
+    {
+        return $this->premium_api_key;
     }
 
     /**

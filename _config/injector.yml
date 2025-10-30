@@ -9,3 +9,6 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\TinyMCE\TinyMCECombinedGenerator
     properties:
       AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler'
+  SilverStripe\TinyMCE\TinyMCEConfig:
+    properties:
+      PremiumApiKey: '`TINYMCE_API_KEY`'

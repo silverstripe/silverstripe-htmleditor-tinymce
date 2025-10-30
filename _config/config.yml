@@ -9,6 +9,3 @@ SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'silverstripe/htmleditor-tinymce: client/dist/js/bundle.js'
-
-SilverStripe\TinyMCE\TinyMCEConfig:
-  premium_api_key: '`TINYMCE_API_KEY`'
