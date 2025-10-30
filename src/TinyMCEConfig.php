@@ -312,6 +312,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'convert_unsafe_embeds' => true, // SS-2024-001
     ];
 
+    private static string $premium_api_key = '';
+
     protected static string $configType = 'tinyMCE';
 
     protected static string $schemaComponent = 'TinyMceHtmlEditorField';
@@ -672,6 +674,40 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
                 $this->plugins[$name] = $path;
             }
         }
+        return $this;
+    }
+
+    /**
+     * Enables one or more Premium Plugins (that require subscriptions)
+     * Should be passed in by name only
+     *
+     * @see https://www.tiny.cloud/docs/tinymce/latest/plugins/#premium-plugins
+     *
+     * Requires an API Key to be set via config @ TinyMCEConfig::premium_api_key
+     *
+     * @param string|array ...$plugin a string, or several strings, or a single array of strings - The plugins to enable
+     */
+    public function enablePremiumPlugins(string|array $plugin): static
+    {
+        $apiKey = static::config()->get('premium_api_key');
+        if (empty($apiKey)) {
+            throw new Exception(sprintf(
+            'TinyMCEConfig::premium_api_key is required to be set to include a premium plugin',
+            __CLASS__
+            ));
+        }
+        $plugins = func_get_args();
+        if (is_array(current($plugins ?? []))) {
+            $plugins = current($plugins ?? []);
+        }
+        $template = 'https://cdn.tiny.cloud/1/%s/tinymce/6/plugins/%s/plugin.min.js';
+        foreach ($plugins as $name) {
+            if (!array_key_exists($name, $this->plugins ?? [])) {
+                $path = sprintf($template, $apiKey, $name);
+                $this->plugins[$name] = $path;
+            }
+        }
+
         return $this;
     }
 
