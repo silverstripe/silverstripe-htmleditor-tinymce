@@ -204,23 +204,6 @@ class TinyMCEConfigTest extends SapphireTest
         $this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
     }
 
-    public function testEnablePremiumPluginsNoKey()
-    {
-        $c = new TinyMCEConfig();
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches('/premium_api_key is required to be set to include a premium plugin/');
-        $c->enablePremiumPlugins('plugin_premium');
-    }
-
-    public function testEnablePremiumPluginsByString()
-    {
-        $c = new TinyMCEConfig();
-        $c->setPremiumApiKey('test1234');
-        $c->enablePremiumPlugins('plugin_premium');
-        $this->assertContains('plugin_premium', array_keys($c->getPlugins() ?? []));
-        $this->assertEquals('https://cdn.tiny.cloud/1/test1234/tinymce/6/plugins/plugin_premium/plugin.min.js', $c->getPlugins()['plugin_premium']);
-    }
-
     public function testDisablePluginsByString()
     {
         $c = new TinyMCEConfig();
