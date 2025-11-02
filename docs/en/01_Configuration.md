@@ -54,6 +54,30 @@ TinyMCEConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 > [TinyMCE documentation of this option](https://www.tiny.cloud/docs/tinymce/6/toolbar-configuration-options/#toolbar)
 > for more details.
 
+## Enabling premium plugins
+
+TinyMCE has plugins that are only available on a paid plan; see [their documentation](https://www.tiny.cloud/docs/tinymce/6/plugins/#premium-plugins).
+To use these, you must first generate an API key and store that securely (such as an environment variable)
+and insert that as part of the source URL as follows:
+
+```php
+// app/_config.php
+use SilverStripe\Core\Environment;
+use SilverStripe\TinyMCE\TinyMCEConfig;
+
+// grab the API key from your environment variables
+$apiKey = Environment::getEnv('SS_TINYMCE_API_KEY');
+
+// lay out the format for the CDN endpoint
+$template = 'https://cdn.tiny.cloud/1/%s/tinymce/6/plugins/%s/plugin.min.js';
+
+TinyMCEConfig::get('cms')->enablePlugins([
+  'checklist' => sprintf($template, $apiKey, 'checklist'),
+]);
+```
+
+This ensures that they are retrieved properly through the TinyMCE CDN. Once added, they can be treated as any other plugin.
+
 ## Enabling custom plugins
 
 It is also possible to add custom plugins to TinyMCE, for example toolbar buttons.
