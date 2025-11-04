@@ -340,6 +340,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'searchreplace' => null,
         'visualblocks' => null,
         'wordcount' => null,
+        'help' => null,
     ];
 
     /**

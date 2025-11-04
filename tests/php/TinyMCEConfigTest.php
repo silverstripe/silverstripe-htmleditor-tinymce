@@ -153,7 +153,8 @@ class TinyMCEConfigTest extends SapphireTest
             'autolink',
             'searchreplace',
             'visualblocks',
-            'wordcount'
+            'wordcount',
+            'help'
         );
         $c->enablePlugins(
             [
