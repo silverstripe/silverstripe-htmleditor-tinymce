@@ -1,129 +1,123 @@
 /* global window */
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Script from 'react-load-script';
 import { Component as TextField } from 'components/TextField/TextField';
 import fieldHolder from 'components/FieldHolder/FieldHolder';
 
-class TinyMceHtmlEditorField extends TextField {
-  /**
-   * sets initial state:
-   * if editorjs IS defined, we are NOT ready (must check dependency first).
-   * if editorjs is NOT defined, we ARE ready (no dependency).
-   */
-  constructor(props) {
-    super(props);
-    this.state = {
-      isReady: !props.data.editorjs
-    };
+const TinyMceHtmlEditorField = ({
+  id,
+  name,
+  className,
+  extraClass,
+  disabled,
+  readOnly,
+  value,
+  placeholder,
+  autoFocus,
+  onBlur,
+  onFocus,
+  onChange,
+  data,
+  tip,
+  type,
+  attributes,
+}) => {
+  const [isReady, setIsReady] = useState(!data.editorjs);
+  const inputRef = useRef(null);
 
-    this.inputRef = null;
+  const mergedAttributes = {
+    ...attributes,
+    ...data.attributes,
+    innerRef: ref => { inputRef.current = ref; },
+  };
 
-    this.handleReady = this.handleReady.bind(this);
-  }
+  const getEditorElement = () => document.getElementById(id);
 
-  getInputProps() {
-    return {
-      ...super.getInputProps(),
-      ...this.props.data.attributes,
-      innerRef: ref => { this.inputRef = ref; },
-    };
-  }
-
-  getEditorElement() {
-    return document.getElementById(this.getInputProps().id);
-  }
-
-  getEditor() {
-    return window.TinyMCE && window.TinyMCE.get(this.getInputProps().id);
-  }
+  const getEditor = () => window.TinyMCE && window.TinyMCE.get(id);
 
   /**
    * Once the dependency script is loaded, updating the internal state
    * will trigger a reload and present the editor to the user
    */
-  handleReady() {
+  const handleReady = () => {
     if (!window.TinyMCE && window.tinymce) {
       window.TinyMCE = window.tinymce;
     }
-    this.setState({ isReady: true });
-  }
+    setIsReady(true);
+  };
+
+  /**
+   * Handles changes to the input field's value.
+   */
+  const handleChange = (event) => {
+    if (typeof onChange === 'function') {
+      if (!event.target) {
+        return;
+      }
+      onChange(event, { id, value: event.target.value });
+    }
+  };
 
   /**
    * Forces the editor to invoke a change on the InputField
    */
-  registerChangeListener() {
-    const target = this.getEditorElement();
-    this.getEditor().on('change keyup', () => {
-      super.handleChange({ target });
+  const registerChangeListener = () => {
+    const target = getEditorElement();
+    getEditor().on('change keyup', () => {
+      handleChange({ target });
     });
-  }
+  };
 
   /**
    * TinyMCE operates from a global script being loaded in first.
    * We must ensure this dependency is loaded before proceeding to
    * render the editor proper
    */
-  renderDependencyScript() {
+  const renderDependencyScript = () => {
     if (!window.tinymce && !window.TinyMCE) {
-      return <Script url={this.props.data.editorjs} onLoad={this.handleReady} />;
+      return <Script url={data.editorjs} onLoad={handleReady} />;
     }
     // If the script is already loaded, mark as ready after this render cycle finishes.
     setTimeout(() => {
-      this.handleReady();
+      handleReady();
     }, 0);
     return null;
-  }
+  };
 
-  render() {
-    return (this.state.isReady) ? super.render() : this.renderDependencyScript();
-  }
-
-  /**
-   * When the handleReady callback is run, the state is changed.
-   * This state change triggers the render of the .htmleditor element
-   * however since this is not added by entwine, the entwine hook for
-   * onadd is not run - we must trigger this manually.
-   */
-  componentDidUpdate(prevProps, prevState) {
-    const { isReady } = this.state;
-
+  useEffect(() => {
     if (!isReady) {
       return;
     }
+    setTimeout(() => {
+      const { document, jQuery: $ } = window;
+      const mountEvent = $ ? $.Event('EntwineElementsAdded') : new Event('noop');
+      const editorElement = getEditorElement();
+      mountEvent.targets = [editorElement];
+      if ($) {
+        $(document).triggerHandler(mountEvent);
+      }
+      registerChangeListener();
+    }, 1);
+  }, [isReady, id]);
 
-    if (isReady !== prevState.isReady) {
-      setTimeout(() => {
-        const { document, jQuery: $ } = window;
-        const mountEvent = $ ? $.Event('EntwineElementsAdded') : new Event('noop');
-        const editorElement = this.getEditorElement();
-        mountEvent.targets = [editorElement];
-        if ($) {
-          $(document).triggerHandler(mountEvent);
-        }
-        this.registerChangeListener();
-      }, 1);
-    }
-
-    const { value } = this.props;
-
-    if (value !== prevProps.value) {
+  useEffect(() => {
+    if (value && inputRef.current) {
       const event = new Event('change', { bubbles: true });
       event.simulated = true;
       event.value = value;
-      this.inputRef.dispatchEvent(event);
+      inputRef.current.dispatchEvent(event);
     }
-  }
+  }, [value, inputRef]);
 
-  componentWillUnmount() {
-    if (!this.state.isReady) {
+  useEffect(() => () => {
+    if (!isReady) {
       return;
     }
-
     const { document, jQuery: $ } = window;
     const unmountEvent = $ ? $.Event('EntwineElementsRemoved') : new Event('noop');
-    const editorElement = this.getEditorElement();
+    const editorElement = getEditorElement();
     // Tell tinyMCE to persist changes into the text field
-    const editor = this.getEditor();
+    const editor = getEditor();
     if (editor) {
       editor.save();
     }
@@ -132,12 +126,35 @@ class TinyMceHtmlEditorField extends TextField {
     // This is pretty awful because TinyMCE triggers jQuery events which aren't picked up
     // by the react components. We also can't manufacture an event with the right target
     // without actually dispatching the event, and by then it's too late.
-    super.handleChange({ target: editorElement });
+    handleChange({ target: editorElement });
     if ($) {
       $(document).triggerHandler(unmountEvent);
     }
-  }
-}
+  }, [isReady, id]);
+
+  return isReady ? (
+    <TextField
+      id={id}
+      name={name}
+      className={className}
+      extraClass={extraClass}
+      disabled={disabled}
+      readOnly={readOnly}
+      value={value}
+      placeholder={placeholder}
+      autoFocus={autoFocus}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      onChange={onChange}
+      data={data}
+      tip={tip}
+      type={type}
+      attributes={mergedAttributes}
+    />
+  ) : (
+    renderDependencyScript()
+  );
+};
 
 export { TinyMceHtmlEditorField as Component };
 
