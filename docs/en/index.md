@@ -10,4 +10,14 @@ This module provides everything necessary to use the [TinyMCE 6](https://www.tin
 
 See [rich-text editing (WYSIWYG)](https://docs.silverstripe.org/en/developer_guides/forms/field_types/htmleditorfield/) for general documentation that applies to all HTML editor implementations, including this one.
 
+## Installation
+
+```bash
+composer require silverstripe/htmleditor-tinymce
+```
+
+## GitHub repository
+
+<https://github.com/silverstripe/silverstripe-htmleditor-tinymce>
+
 [CHILDREN includeFolders]
