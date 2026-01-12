@@ -12,6 +12,7 @@
 @border-color: #c1cad9;
 @tinymce-separator-color: @border-color;
 @color-success: #118814;
+@blue: #0071C4;
 // Note: Don't replace @color-tint, because that is manipulated and may result in things looking bad in situations we haven't explicitly expected.
 @tint: #eef0f3;
 
@@ -25,8 +26,8 @@
 @panel-border-radius: 6px; // Dialogs, menus etc.
 @control-border-radius: 3px; // Buttons, input fields etc.
 @menubar-select-hover-border: @toolbar-button-hover-border;
-// Menu items
-@collection-list-item-active-background-color: darken(@toolbar-button-hover-background-color, 30%);
+// Menu items (dropdowns)
+@collection-list-item-active-background-color: @blue;
 @collection-list-item-label-active-text-color: @color-white;
 
 // Buttons
@@ -37,7 +38,7 @@
 @button-hover-border: @tinymce-border-width solid darken(@button-background-color, 20%);
 @button-active-background-color: darken(@button-background-color, 5%);
 // secondary
-@button-secondary-background-color: @tint;
+@button-secondary-background-color: #dae3e9;
 @button-secondary-text-color: @color-black;
 @button-secondary-hover-background-color: darken(@button-secondary-background-color, 5%);
 @button-secondary-hover-border-color: darken(@button-secondary-background-color, 20%);
@@ -49,15 +50,17 @@
 @toolbar-button-border: @button-border;
 @toolbar-button-hover-background-color: @button-secondary-background-color;
 @toolbar-button-hover-border: @button-hover-border solid darken(@toolbar-button-hover-background-color, 20%);
-@toolbar-button-enabled-background-color: darken(@toolbar-button-hover-background-color, 5%);
-@toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
+@toolbar-button-enabled-background-color: darken(@toolbar-button-hover-background-color, 55%);
+@toolbar-button-enabled-text-color: @color-white;
+@toolbar-button-enabled-icon-color: @toolbar-button-enabled-text-color;
 
 // Toolbar select
 @toolbar-button-bespoke-background-color: transparent;
 
 // Table
-@insert-table-picker-selected-background-color: darken(@tint, 20%);
-@insert-table-picker-selected-border-color: darken(@insert-table-picker-selected-background-color, 30%);
+@insert-table-picker-selected-background-color: @blue;
+// The below are NOT in TinyMCE's normal variables, see overrides below
+@insert-table-picker-cell-margin: 1px;
 
 // Form elements
 @input-label-text-color: @text-color;
@@ -73,16 +76,23 @@
     box-shadow: @toolbar-button-active-box-shadow;
     color: @toolbar-button-active-text-color;
 
-    .tox-tbtn__select-chevron svg {
-      fill: @toolbar-button-active-text-color;
+    /* stylelint-disable no-descending-specificity */
+    .tox-tbtn__icon-wrap,
+    .tox-tbtn__select-chevron {
+      svg {
+        fill: @toolbar-button-active-text-color;
+      }
     }
+    /* stylelint-enable no-descending-specificity */
   }
 
   .tox-collection--list {
     // When a menu item is hovered and not disabled
     .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-      .tox-collection__item-accessory {
-        color: @collection-list-item-label-active-text-color;
+      .tox-collection__item-accessory,
+      .tox-collection__item-label * {
+        // We have to use !important here to override styles that are applied directly to the element itself.
+        color: @collection-list-item-label-active-text-color !important;
       }
 
       .tox-collection__item-caret svg {
@@ -91,17 +101,77 @@
     }
     // When a menu item is hovered and disabled
     .tox-collection__item--active.tox-collection__item--state-disabled {
-      background: @toolbar-button-active-background-color;
+      background-color: inherit;
+    }
+
+    // Ensure formats dropdown can fit heading levels
+    // We can't explicitly target that dropdown, and don't want
+    // to affect other dropdowns, so we can't guarantee other
+    // formats (e.g. custom classes) also fit nicely.
+    .tox-collection__item {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        line-height: 1.25em;
+      }
     }
   }
 
-  // Table creation squares when selected
-  .tox-insert-table-picker .tox-insert-table-picker__selected {
-    border-color: @insert-table-picker-selected-border-color;
+  // Give table selector separation between cells
+  // and ensure background doesn't go blue when hovering
+  .tox-insert-table-picker {
+    background-color: @color-white;
+    width: (@insert-table-picker-cell-size * 10) + (@insert-table-picker-cell-margin * 20) + 2;
+
+    // Cell styles
+    > div {
+      border-width: 1px;
+      margin: @insert-table-picker-cell-margin;
+    }
+
+    // Table selector squares when selected
+    .tox-insert-table-picker__selected {
+      border-color: @insert-table-picker-selected-background-color;
+    }
   }
 
   // Dialog box text areas, such as the source code dialog
   .tox-dialog .tox-textarea {
     background-color: @color-white;
   }
+}
+
+// Add back right border for table selector cells
+.tox:not([dir=rtl]) {
+  .tox-insert-table-picker {
+    & > div:nth-child(10n) {
+      border-right: 1px solid @insert-table-picker-border-color;
+
+      &.tox-insert-table-picker__selected {
+        border-right-color: @insert-table-picker-selected-background-color;
+      }
+    }
+  }
+}
+
+// Add back right border for table selector cells in RTL mode
+.tox[dir=rtl] {
+  .tox-insert-table-picker {
+    & > div:nth-child(10n+1) {
+      border-right: 1px solid @insert-table-picker-border-color;
+
+      &.tox-insert-table-picker__selected {
+        border-right-color: @insert-table-picker-selected-background-color;
+      }
+    }
+  }
+}
+
+// Override margin around table picker to give space around the cells
+// Don't use padding as that seems to affect the picker JS
+.tox .tox-collection--list .tox-collection__group .tox-insert-table-picker {
+  margin: 0;
 }
