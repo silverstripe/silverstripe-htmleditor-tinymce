@@ -303,7 +303,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'remove_script_host' => true,
         'convert_urls' => false, // Prevent site-root images being rewritten to base relative
         'menubar' => false,
-        'language' => 'en',
         'branding' => false,
         'promotion' => false,
         'upload_folder_id' => null, // Set folder ID for insert media dialog
