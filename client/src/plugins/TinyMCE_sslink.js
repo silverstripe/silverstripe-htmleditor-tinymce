@@ -142,16 +142,20 @@ jQuery.entwine('ss', ($) => {
     },
 
     /**
-     * Check if one node is the same as another node (or is the same as that other node's child)
+     * Check if one node is the same as another node (or is the same as one of that other node's children).
      */
     checkNodeMatches(node, matchWith) {
       if (node === matchWith) {
         return true;
       }
-      if (matchWith.children.length === 1) {
-        // In chrome, selecting an image actually results in selecting the paragraph.
-        // If there's exactly one child, treat that child as the selection to account for this scenario.
-        return node === matchWith.children[0];
+      if (!matchWith || !matchWith.children) {
+        return false;
+      }
+      const children = matchWith.children;
+      for (let i = 0; i < children.length; i++) {
+        if (node === children[i]) {
+          return true;
+        }
       }
       return false;
     },
