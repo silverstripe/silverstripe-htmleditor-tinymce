@@ -45,6 +45,20 @@ So that I can link to a external website or a page on my site
     When I press the "Save" button
     Then I should see a "Saved Page "About Us"" success toast
 
+  Scenario: I can wrap an image in a link when the image has a sibling element
+    Given I fill in the "Content" HTML field with "<p><strong>Intro</strong><img src='file1.jpg'></p>"
+    When I select the image "file1.jpg" in the "Content" HTML field
+      And I press the "Insert link" HTML field button
+      And I click "Page on this site" in the ".tox-collection__group" element
+    Then I should see an "form#Form_linkModalFormeditorInternalLink" element
+      And I should not see "Link text"
+    When I select "About Us" in the "#Form_linkModalFormeditorInternalLink_PageID_Holder" tree dropdown
+      And I press the "Insert link" button
+    Then the "Content" HTML field should contain "<strong>Intro</strong><a href="[sitetree_link,id=2]"><img src="file1.jpg" alt=""></a>"
+    # Required to avoid "unsaved changes" browser dialog
+    When I press the "Save" button
+    Then I should see a "Saved Page "About Us"" success toast
+
   Scenario: I can edit a link to an internal page
     Given I fill in the "Content" HTML field with "<a title='my desc' href='[sitetree_link,id=2]'>awesome</a>"
       And I select "awesome" in the "Content" HTML field
