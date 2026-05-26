@@ -21,6 +21,22 @@ use SilverStripe\i18n\i18n;
 
 class TinyMCEConfigTest extends SapphireTest
 {
+    private ?string $originalLocale = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalLocale = i18n::get_locale();
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->originalLocale !== null) {
+            i18n::set_locale($this->originalLocale);
+        }
+        parent::tearDown();
+    }
+
     public function testEditorIdentifier()
     {
         $config = TinyMCEConfig::get('myconfig');

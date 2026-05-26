@@ -19,7 +19,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "TinyMCE.LINK_ANCHOR": "Link zu einem Anker auf einer Seite",
     "TinyMCE.LINK_EMAIL": "E-Mail-Link einfügen",
     "TinyMCE.LINK_EXTERNAL": "Externen Link einfügen",
-    "TinyMCE.LINK_PAGE'": "Link zu einer Seite",
+    "TinyMCE.LINK_PAGE": "Link zu einer Seite",
     "TinyMCE.LINKLABEL_ANCHOR": "Anker auf einer Seite",
     "TinyMCE.LINKLABEL_EMAIL": "Link zu einer E-Mail-Adresse",
     "TinyMCE.LINKLABEL_EXTERNALURL": "Link zu externer URL",
