@@ -498,10 +498,10 @@ jQuery.entwine('ss', ($) => {
       let container = img.parent('.captionImage');
       let caption = container.find('.caption');
 
-      // If we've got caption text, we need a wrapping div.captionImage and sibling p.caption
+      // If we've got caption text, we need a wrapping figure.captionImage and sibling figcaption.caption
       if (extraData.CaptionText) {
         if (!container.length) {
-          container = $('<div></div>');
+          container = $('<figure></figure>');
         }
 
         container
@@ -510,7 +510,7 @@ jQuery.entwine('ss', ($) => {
           .width(attrs.width);
 
         if (!caption.length) {
-          caption = $('<p class="caption"></p>').appendTo(container);
+          caption = $('<figcaption class="caption"></figcaption>').appendTo(container);
         }
 
         caption.attr('class', `caption ${attrs.class}`).text(extraData.CaptionText);
