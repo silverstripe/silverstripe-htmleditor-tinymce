@@ -494,14 +494,25 @@ jQuery.entwine('ss', ($) => {
       img.attr(attrs)
         .addClass('ss-htmleditorfield-file image');
 
-      // Any existing figure or caption node
+      // Any existing container or caption node
       let container = img.parent('.captionImage');
       let caption = container.find('.caption');
 
-      // If we've got caption text, we need a wrapping div.captionImage and sibling p.caption
+      // Opt-in via the `use_figure_captions` config: when enabled, captioned
+      // images use figure/figcaption markup instead of the old div/p markup.
+      const useFigureCaptions = editor.getInstance().getParam('use_figure_captions', false);
+
+      const containerTag = useFigureCaptions
+        ? '<figure></figure>'
+        : '<div></div>';
+      const captionTag = useFigureCaptions
+        ? '<figcaption class="caption"></figcaption>'
+        : '<p class="caption"></p>';
+
+      // If we've got caption text, we need a wrapping .captionImage container and sibling .caption
       if (extraData.CaptionText) {
         if (!container.length) {
-          container = $('<div></div>');
+          container = $(containerTag);
         }
 
         container
@@ -510,7 +521,7 @@ jQuery.entwine('ss', ($) => {
           .width(attrs.width);
 
         if (!caption.length) {
-          caption = $('<p class="caption"></p>').appendTo(container);
+          caption = $(captionTag).appendTo(container);
         }
 
         caption.attr('class', `caption ${attrs.class}`).text(extraData.CaptionText);

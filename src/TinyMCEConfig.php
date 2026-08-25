@@ -249,6 +249,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     ];
 
     /**
+     * When true, images with captions are wrapped in <figure>/<figcaption> instead of the
+     * original <div>/<p> markup.
+     */
+    private static bool $use_figure_captions = false;
+
+    /**
      * Default TinyMCE JS options which apply to all new configurations.
      *
      * @link https://www.tiny.cloud/docs/tinymce/6/tinydrive-getting-started/#configure-the-required-tinymce-options
@@ -912,6 +918,9 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         $settings['theme_url'] = $theme;
 
         $this->initImageSizePresets($settings);
+
+        // Opt-in usage of figure/figcaption for images with captions
+        $settings['use_figure_captions'] = (bool) static::config()->get('use_figure_captions');
 
         // Set correct language if one was not explicitly set
         $settings['language'] ??= TinyMCEConfig::getTinymceLang();
