@@ -17,9 +17,26 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet;
 use SilverStripe\TinyMCE\TinyMCEConfig;
+use SilverStripe\i18n\i18n;
 
 class TinyMCEConfigTest extends SapphireTest
 {
+    private ?string $originalLocale = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalLocale = i18n::get_locale();
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->originalLocale !== null) {
+            i18n::set_locale($this->originalLocale);
+        }
+        parent::tearDown();
+    }
+
     public function testEditorIdentifier()
     {
         $config = TinyMCEConfig::get('myconfig');
@@ -59,6 +76,46 @@ class TinyMCEConfigTest extends SapphireTest
             }
             $checked[$resource] = true;
         }
+    }
+
+    /**
+     * Regression test for upstream issue #43: the `language` setting must follow
+     * the current locale. A hardcoded 'language' => 'en' default previously
+     * shadowed the per-request locale-aware fallback in getConfig().
+     */
+    public function testLanguageDefaultFollowsCurrentLocale(): void
+    {
+        i18n::set_locale('de_DE');
+        $config = new TinyMCEConfig();
+        $attributes = $config->getAttributes();
+        $dataConfig = json_decode($attributes['data-config'] ?? '', true);
+        $this->assertSame('de', $dataConfig['language']);
+    }
+
+    public function testLanguageFallsBackToEnglishForUnmappedLocale(): void
+    {
+        i18n::set_locale('xx_XX');
+        $config = new TinyMCEConfig();
+        $attributes = $config->getAttributes();
+        $dataConfig = json_decode($attributes['data-config'] ?? '', true);
+        $this->assertSame('en', $dataConfig['language']);
+    }
+
+    public function testExplicitLanguageOverridesLocaleFallback(): void
+    {
+        i18n::set_locale('de_DE');
+        $config = new TinyMCEConfig();
+        $config->setOption('language', 'es');
+        $attributes = $config->getAttributes();
+        $dataConfig = json_decode($attributes['data-config'] ?? '', true);
+        $this->assertSame('es', $dataConfig['language']);
+    }
+
+    public function testExtraRequirementsI18nIsRegistered(): void
+    {
+        $requirements = Config::inst()->get('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_i18n');
+        $this->assertIsArray($requirements);
+        $this->assertContains('silverstripe/htmleditor-tinymce: client/lang', $requirements);
     }
 
     public function testGetContentCSS()
