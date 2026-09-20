@@ -9,3 +9,5 @@ SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'silverstripe/htmleditor-tinymce: client/dist/js/bundle.js'
+  extra_requirements_i18n:
+    - 'silverstripe/htmleditor-tinymce: client/lang'
