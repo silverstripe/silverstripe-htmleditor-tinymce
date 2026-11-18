@@ -165,6 +165,20 @@ class TinyMCEConfigTest extends SapphireTest
     }
 
 
+    public function testUseFigureCaptionsIsPerConfig(): void
+    {
+        $withFigures = TinyMCEConfig::get('test-figure-captions-on');
+        $withFigures->setOption('use_figure_captions', true);
+        $attributes = $withFigures->getAttributes();
+        $dataConfig = json_decode($attributes['data-config'] ?? '', true);
+        $this->assertTrue($dataConfig['use_figure_captions']);
+
+        $withoutFigures = TinyMCEConfig::get('test-figure-captions-off');
+        $attributes = $withoutFigures->getAttributes();
+        $dataConfig = json_decode($attributes['data-config'] ?? '', true);
+        $this->assertArrayNotHasKey('use_figure_captions', $dataConfig);
+    }
+
     public function testEnablePluginsByString()
     {
         $c = new TinyMCEConfig();
